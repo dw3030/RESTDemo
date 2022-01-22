@@ -1,6 +1,7 @@
 const express = require("express");
 const app = express();
 const path = require("path");
+const methodOverride = require("method-override");
 const { v4: uuid } = require("uuid");
 // anytime we call uuid, we will get a universally unique identifier
 
@@ -67,6 +68,12 @@ app.patch("/comments/:id", (req, res) => {
   //   this actually will mutate the array, but that's not really a best practice in web dev
   foundComment.comment = newCommentText;
   res.redirect("/comments");
+
+  app.get("/comments/:id/edit", (req, res) => {
+    const { id } = req.params;
+    const comment = comments.find((c) => c.id === id);
+    res.render("comments/edit", { comment });
+  });
 
   //   const comment = comments.find((c) => c.id === id);
   //   res.send("patch success");
