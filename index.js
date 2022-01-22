@@ -79,6 +79,13 @@ app.patch("/comments/:id", (req, res) => {
   //   res.send("patch success");
 });
 
+app.delete("/comments/:id", (req, res) => {
+  const { id } = req.params;
+  // return a new array with .filter
+  comments = comments.filter((c) => c.id !== id);
+  res.redirect("/comments");
+});
+
 // // *** old practice
 // app.get("/tacos", (req, res) => {
 //   res.send("GET /tacos response");
