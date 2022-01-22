@@ -1,6 +1,8 @@
 const express = require("express");
 const app = express();
 const path = require("path");
+const { v4: uuid } = require("uuid");
+// anytime we call uuid, we will get a universally unique identifier
 
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
@@ -9,18 +11,22 @@ app.set("view engine", "ejs");
 
 let comments = [
   {
+    id: uuid(),
     username: "Todd",
     comment: "lol that is so funny",
   },
   {
+    id: uuid(),
     username: "Chad",
     comment: "not that funny",
   },
   {
+    id: uuid(),
     username: "Tina",
     comment: "you guys are gross",
   },
   {
+    id: uuid(),
     username: "Brad",
     comment: "lol!!!",
   },
@@ -36,10 +42,20 @@ app.get("/comments/new", (req, res) => {
 
 app.post("/comments", (req, res) => {
   const { username, comment } = req.body;
-  comments.push({ username, comment });
+  comments.push({ username, comment, id: uuid() });
   res.redirect("/comments");
+  // need to create a new unique id as new comments are created...using npm i uuid...
+
   //   console.log(req.body);
   //   res.send("It Worked!");
+});
+
+app.get("/comments/:id", (req, res) => {
+  const { id } = req.params;
+  //   the id from req.params will be a STRING!
+  //   the below statement will parse out the id into a number...but with uuid, no need to parseInt
+  const comment = comments.find((c) => c.id === id);
+  res.render("comments/show", { comment });
 });
 
 // // *** old practice
