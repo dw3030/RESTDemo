@@ -7,6 +7,7 @@ const { v4: uuid } = require("uuid");
 
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
+app.use(methodOverride("_method"));
 app.set("views", path.join(__dirname, "views"));
 app.set("view engine", "ejs");
 
@@ -59,6 +60,12 @@ app.get("/comments/:id", (req, res) => {
   res.render("comments/show", { comment });
 });
 
+app.get("/comments/:id/edit", (req, res) => {
+  const { id } = req.params;
+  const comment = comments.find((c) => c.id === id);
+  res.render("comments/edit", { comment });
+});
+
 // app.patch is in the express docs under app.METHOD
 app.patch("/comments/:id", (req, res) => {
   const { id } = req.params;
@@ -68,13 +75,6 @@ app.patch("/comments/:id", (req, res) => {
   //   this actually will mutate the array, but that's not really a best practice in web dev
   foundComment.comment = newCommentText;
   res.redirect("/comments");
-
-  app.get("/comments/:id/edit", (req, res) => {
-    const { id } = req.params;
-    const comment = comments.find((c) => c.id === id);
-    res.render("comments/edit", { comment });
-  });
-
   //   const comment = comments.find((c) => c.id === id);
   //   res.send("patch success");
 });
