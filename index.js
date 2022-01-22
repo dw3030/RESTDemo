@@ -58,6 +58,20 @@ app.get("/comments/:id", (req, res) => {
   res.render("comments/show", { comment });
 });
 
+// app.patch is in the express docs under app.METHOD
+app.patch("/comments/:id", (req, res) => {
+  const { id } = req.params;
+  //   the payload only includes the new comment text
+  const newCommentText = req.body.comment;
+  const foundComment = comments.find((c) => c.id === id);
+  //   this actually will mutate the array, but that's not really a best practice in web dev
+  foundComment.comment = newCommentText;
+  res.redirect("/comments");
+
+  //   const comment = comments.find((c) => c.id === id);
+  //   res.send("patch success");
+});
+
 // // *** old practice
 // app.get("/tacos", (req, res) => {
 //   res.send("GET /tacos response");
